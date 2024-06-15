@@ -1,0 +1,121 @@
+#include <stdio.h>
+
+
+
+
+
+// repertoire de tous les enregistrements
+void listerutlisateur(){
+
+    system("cls");
+    fflush(stdin);
+
+    FILE *pF = fopen("user_Records.txt", "r");
+
+    char fname[255], lname[255], gender[5];
+    double sid, phone;
+    int counter=0;
+
+    printf("-------------------------------\n");
+    printf(">>> Liste des utilisateurs enregistre<<< \n");
+    printf("-------------------------------\n\n");
+
+    while(fscanf(pF, "%s %s %s %lf %lf \n", fname, lname, gender, &sid, &phone) != EOF)
+    {
+       strcat(fname, " ");
+       strcat(fname, lname);
+
+        printf("-------------------------------\n");
+        printf("> Nom complet: %s \n", fname);
+        //printf("> Last Name: %s \n", lname);
+        printf("> sexe: %s \n", gender);
+        printf("> ID etudiant: %.0lf \n", sid);
+        printf("> numero telephone.: %.0lf \n", phone);
+        printf("-------------------------------\n\n\n");
+
+        counter++;
+    }
+
+    fclose(pF);
+
+    if(counter == 0)
+    {
+        printf("-------------------------------------\n");
+        printf("aucun enregistrement utilisateur n'a encore ete ajoute...\n");
+        printf("--------------------------------------\n\n");
+    }
+
+    printf("Appuyez sur n'importe quelle touche pour revenir au penneau utilisateur.\n");
+    getch();
+    partieutilisateur();
+}
+
+// cela verfie si l'utilisateur speficie existe ou non dans les enregistrements
+int rechercheutilisateur(int nameSearcher){
+
+label2:
+
+    system("cls");
+    fflush(stdin);
+
+    char fname[255], lname[255], gender[5];
+    double sid, phone;
+
+    int flag=0;
+    int compare;
+    char find[255];
+
+    (nameSearcher != 3) ? printf("Recherche par le nom de l'eleve: ") : printf(":Recherche par le nom de l'eleve qui souhqite louer le livre ");
+    gets(find);
+
+    FILE *pF = fopen("user_Records.txt", "r");
+
+     while(fscanf(pF, "%s %s %s %lf %lf \n", fname, lname, gender, &sid, &phone) != EOF)
+    {
+        //strcmp(variable, variable1) -- if both the strings are equal then it will return 0 otherwise a random number.
+        compare = strcmp(find, fname);
+
+        if(compare == 0)
+        {
+            if(nameSearcher != 3)
+            {
+                strcat(fname, " ");
+                strcat(fname, lname);
+
+                printf("\n---------------------\n");
+                printf(">>> enregistrement trouve <<< \n");
+                printf("---------------------\n\n");
+
+                printf("-------------------------------\n");
+                printf("> Nom complet: %s \n", fname);
+                printf("> sexe: %s \n", gender);
+                printf("> ID etudiant: %.0lf \n", sid);
+                printf("> Numero de telephone: %.0lf \n", phone);
+                printf("-------------------------------\n\n");
+
+            }
+            strcpy(rentName, fname);
+            flag=1;
+        }
+    }
+
+    fclose(pF);
+
+    if(flag == 0)
+    {
+        printf("\n>>> enregistrement introuvable <<< \n\n");
+    }
+
+    fflush(stdin);
+
+    if(nameSearcher != 3)
+    {
+        printf("Appuyez sur n'importe quelle touche pour revenir au panneau.");
+        getch();
+        partieutilisateur();
+    }
+    else if(nameSearcher == 3 && flag == 1)
+    {
+        return 5;
+    }
+}
