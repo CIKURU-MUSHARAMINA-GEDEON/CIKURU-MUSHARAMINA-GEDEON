@@ -1,0 +1,54 @@
+system("cls");
+    fflush(stdin);
+
+    char name[255], author[255], publisher[255];
+    double bookid, quantity;
+    int flag=0;
+    int compare;
+    char find[255];
+    (bookSearcher != 3) ? printf("Recherchez le livre par  nom d'auteur ou par nom livre: ") : printf("Definissez le livre par nom d'auteur ou noms de livre: ");
+    gets(find);
+
+    FILE *pF = fopen("book_Records.txt", "r");
+
+    while(fscanf(pF, "%s %s %s %lf %lf \n", name, author, publisher, &bookid, &quantity) != EOF)
+    {
+        compare = strcmp(find, name);
+        compare = strcmp(find, author);
+        if(compare == 0)
+        {
+            if(bookSearcher != 3)
+            {
+                printf("\n-------------------------\n");
+                printf(">>> Enregistrement trouve <<< \n");
+                printf("-------------------------\n\n");
+                printf("-------------------------------\n");
+                printf("> Nom livre: %s \n", name);
+                printf("> Auteur: %s \n", author);
+                printf("> editeur: %s\n", publisher);
+                printf("> Id livre: %.0lf \n", bookid);
+                printf("> Quantite: %.0lf \n", quantity);
+                printf("-------------------------------\n\n");
+            }
+            strcpy(nomlivre, name);
+            bookStock = quantity;
+            flag=1;
+        }
+    }
+    fclose(pF);
+    fflush(stdin);
+    if(flag == 0)
+    {
+        printf("\n>>> Enregistrement introuvable <<< \n\n");
+    }
+    if(bookSearcher != 3)
+    {
+        printf("Appuyez sur n'importe quelle touche pour rediriger vers le panneau de lecture.");
+        getch();
+        partielivre();
+    }
+    else if(bookSearcher == 3 && flag == 1)
+    {
+        return 5;
+    }
+}
