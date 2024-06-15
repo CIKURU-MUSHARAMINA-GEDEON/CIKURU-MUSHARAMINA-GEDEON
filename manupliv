@@ -1,0 +1,219 @@
+// FONCTIONS DU LIVRE
+void ajouterlivre(){
+
+label3:
+
+    system("cls");
+    fflush(stdin);
+
+    char nom[255], auteur[255], editeur[255];
+    double bookid, quantite;
+
+    FILE *pF = fopen("book_Records.txt", "ab+");
+
+    if(pF != NULL)
+    {
+        printf("Entrez le nom du livre: ");
+        gets(nom);
+
+        printf("Entrez l'auteur du livre: ");
+        gets(auteur);
+
+        printf("Enter l'editeur du livre: ");
+        gets(editeur);
+
+        fflush(stdin);
+
+        printf("Enter L'ID du livre : ");
+        scanf("%lf",&bookid);
+
+        printf("Entrez la qualite du livre : ");
+        scanf("%lf",&quantite);
+
+        fprintf(pF, "%s %s %s %.0lf %.0lf \n", nom, auteur, editeur, bookid, quantite);
+
+        printf("\n>>> Enregistrement du livre ajoutee avec succes <<< \n");
+    }
+    else
+    {
+        printf("impossible d'ouvrir/localiser le fichier.");
+    }
+
+    fclose(pF);
+
+    fflush(stdin);
+
+    char input;
+    printf("\nVoulez-vous saisir plus d'enregistrements: ");
+    scanf("%c",&input);
+
+    if(input == 'y' || input=='Y')
+    {
+        goto label3;
+    }
+    else if(input=='n' || input=='N')
+    {
+        printf("\nredirection vers le panneau livre.");
+        Sleep(2000);
+        partielivre();
+    }
+    else
+    {
+        printf("\nEntree non valide. redirection vres le panneau de lecture.");
+        Sleep(2000);
+        partielivre();
+    }
+}
+
+// modifier les details du livre selon vous et enregistrer a nouveau
+int modifierlivre(int rentModifier){
+
+    system("cls");
+    fflush(stdin);
+
+    char name[255], author[255], publisher[255];
+    double bookid, quantity;
+
+    char name1[255], author1[255], publisher1[255];
+    double bookid1, quantity1;
+
+    int flag=0;
+    int compare;
+    char find[255];
+
+    if (rentModifier != 5)
+    {
+        printf("Entrez le nom du livre dont vous souhaitez voir le detail: ");
+        gets(find);
+        fflush(stdin);
+    }
+    else
+    {
+        strcpy(find, nomlivre);
+    }
+    FILE *pF = fopen("book_Records.txt", "r");
+    FILE *pT = fopen("temporary.txt", "a");
+
+    while(fscanf(pF, "%s %s %s %lf %lf \n", name, author, publisher, &bookid, &quantity) != EOF)
+    {
+        compare = strcmp(find, name);
+
+        if(compare == 0)
+        {
+            if(rentModifier != 5)
+            {
+                printf("\n---------------------------------------------\n");
+                printf(">>> Enregistrement trouve, permettant les modifications <<<\n");
+                printf("-----------------------------------------------\n\n");
+
+                printf("> Entrez le nom du livre: ");
+                gets(name1);
+
+                printf("> Entrez l'auteur: ");
+                gets(author1);
+
+                printf("> Enter Publisher: ");
+                gets(publisher1);
+
+                fflush(stdin);
+
+                printf("> Entrez le ID livre: ");
+                scanf("%lf",&bookid1);
+
+                printf("> Entrez la quantite: ");
+                scanf("%lf",&quantity1);
+
+                fprintf(pT, "%s %s %s %.0lf %.0lf \n", name1, author1, publisher1, bookid1, quantity1);
+                printf("\n\ntraitement vos modifications....");
+            }
+            else
+            {
+                quantity = bookStock;
+                fprintf(pT, "%s %s %s %.0lf %.0lf \n", name, author, publisher, bookid, quantity);
+            }
+            flag = 1;
+        }
+        else
+        {
+            fprintf(pT, "%s %s %s %.0lf %.0lf \n", name, author, publisher, bookid, quantity);
+        }
+    }
+
+    fclose(pF);
+    fclose(pT);
+
+    fflush(stdin);
+
+    pF = fopen("book_Records.txt", "w");
+    fclose(pF);
+
+    if(flag == 0)
+    {
+        printf("\n\n-------------------------------\n");
+        printf(">>> Enregistrement introuvable <<<\n");
+        printf("-------------------------------\n\n");
+        printf("Redirection vres le panneau livre...");
+    }
+
+    pF = fopen("book_Records.txt", "a");
+    pT = fopen("temporary.txt", "r");
+
+    while(fscanf(pT, "%s %s %s %lf %lf \n", name, author, publisher, &bookid, &quantity) != EOF)
+    {
+        fprintf(pF, "%s %s %s %.0lf %.0lf \n", name, author, publisher, bookid, quantity);
+    }
+
+    fclose(pF);
+    fclose(pT);
+
+    pT = fopen("temporary.txt", "w");
+    fclose(pT);
+
+    if(rentModifier != 5)
+    {
+        Sleep(2000);
+        partielivre();
+    }
+}
+
+// lists all the book record from the book_Records.txt file
+void listelivre(){
+
+    system("cls");
+    fflush(stdin);
+
+    char name[255], author[255], publisher[255];
+    double quantity, bookid;
+    int counter=0;
+
+    FILE *pF = fopen("book_Records.txt", "r");
+
+    printf("-------------------------------\n");
+    printf(">>> List of Books Record <<< \n");
+    printf("-------------------------------\n\n");
+
+    while(fscanf(pF, "%s %s %s %lf %lf \n", name, author, publisher, &bookid, &quantity) != EOF)
+    {
+        printf("-------------------------------\n");
+        printf("> Nom: %s \n", name);
+        printf("> auteur: %s \n", author);
+        printf("> Editeur: %s\n", publisher);
+        printf("> ID livre: %.0lf \n", bookid);
+        printf("> Quantite: %.0lf \n", quantity);
+        printf("-------------------------------\n\n\n");
+        counter++;
+    }
+
+    fclose(pF);
+
+    if(counter == 0)
+    {
+        printf("-------------------------------------\n");
+        printf("There is no book records added yet...\n");
+        printf("--------------------------------------\n\n");
+    }
+
+    printf("Press any key to get back to Book Panel.\n");
+    getch();
+    partielivre();
+}
