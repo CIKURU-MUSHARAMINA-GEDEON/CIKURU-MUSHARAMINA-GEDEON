@@ -1,0 +1,31 @@
+ system("cls");
+    fflush(stdin);
+
+    char rentListUser[255], rentListBook[255];
+    int counter = 0;
+
+    FILE *pF = fopen("rent_Records.txt", "r");
+    printf("-------------------------------\n");
+    printf(">>> Liste des livres en loocation <<< \n");
+    printf("-------------------------------\n\n");
+    while(fscanf(pF, "%s %s \n", rentListUser, rentListBook) != EOF)
+    {
+        printf("> Louer un utilisateur: %s \n", rentListUser);
+        printf("> Louer un()des livres(s): %s \n\n", rentListBook);
+
+        counter++;
+    }
+    fclose(pF);
+    fflush(stdin);
+
+    if(counter == 0)
+    {
+        printf("-------------------------------------\n");
+        printf("Aucun enregistrement de loyer n'a encore ete ajoute...\n");
+        printf("--------------------------------------\n\n");
+    }
+
+    printf("\nAppuyez sur n'importe quellle touche pour revenir au panneau utilisateur.\n");
+    getch();
+    partieutilisateur();
+}
